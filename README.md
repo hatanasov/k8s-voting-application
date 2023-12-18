@@ -39,5 +39,3 @@ kubectl delete -f .
 |-- voting-app.yaml
 `-- worker.yaml
 ```
-
---THE END--
