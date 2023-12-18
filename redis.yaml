@@ -1,0 +1,43 @@
+#Redis in memory db for voting pods
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deloy
+  labels:
+    app: voting-application
+    name: redis-deloy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voting-application
+      name: redis-pod
+  template:
+    metadata:
+      name: redis-pod
+      labels:
+        app: voting-application
+        name: redis-pod
+    spec:
+      containers:
+      - name: redis
+        image: redis
+        ports:
+        - containerPort: 6379
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  labels:
+    app: voting-application
+    name: redis-service
+spec:
+  selector:
+    app: voting-application
+    name: redis-pod
+  ports:
+    - port: 6379
+      targetPort: 6379

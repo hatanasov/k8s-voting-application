@@ -1,0 +1,50 @@
+# Voting application user intervace for voting
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: voting-app-deploy
+  labels:
+    app: voting-application
+    name: voting-app-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voting-application
+      name: voting-app-pod
+  template:
+    metadata:
+      name: voting-app-pod
+      labels:
+        app: voting-application
+        name: voting-app-pod
+    spec:
+      containers:
+      - name: voting-app
+        image: kodekloud/examplevotingapp_vote:v1
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+
+# Voting application service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: voting-app-service
+  labels:
+    app: voting-application
+    name: voting-app-service
+spec:
+  type: NodePort
+  selector:
+    app: voting-application
+    name: voting-app-pod
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30080

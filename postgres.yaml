@@ -1,0 +1,51 @@
+#Posgres - db for results
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deloy
+  labels:
+    app: voting-application
+    name: postgres-deloy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voting-application
+      name: postgres-pod
+  template:
+    metadata:
+      name: postgres-pod
+      labels:
+        app: voting-application
+        name: postgres-pod
+    spec:
+      containers:
+      - name: postgres
+        image: postgres
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "postgres"
+        - name: POSTGRES_USER
+          value: "postgres"
+        - name: POSTGRES_HOST_AUTH_METHOD
+          value: trust
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  labels:
+    app: voting-application
+    name: postgres-service
+spec:
+  selector:
+    app: voting-application
+    name: postgres-pod
+  ports:
+    - port: 5432
+      targetPort: 5432
+      

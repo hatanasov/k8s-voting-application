@@ -1,0 +1,50 @@
+# Voting application user intervace for result
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: result-app-deploy
+  labels:
+    app: voting-application
+    name: result-app-deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voting-application
+      name: result-app-pod
+  template:
+    metadata:
+      name: result-app-pod
+      labels:
+        app: voting-application
+        name: result-app-pod
+    spec:
+      containers:
+      - name: result-app
+        image: kodekloud/examplevotingapp_result:v1
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+
+# Voting application - result service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: result-app-service
+  labels:
+    app: voting-application
+    name: result-app-service
+spec:
+  type: NodePort
+  selector:
+    app: voting-application
+    name: result-app-pod
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30081
